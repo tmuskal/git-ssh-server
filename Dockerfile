@@ -8,7 +8,7 @@ CMD ["/sbin/my_init"]
 ## Expose ports.
 EXPOSE 22
 ## Application specific part
-MAINTAINER Stephen Day <sd@unixtastic.com>
+MAINTAINER Tal Muskal <tal@musk.al>
 WORKDIR /tmp
 RUN apt-get -qq -y update && apt-get -qq -y upgrade
 RUN apt-get -qq -y --force-yes install git-sh git sharutils
