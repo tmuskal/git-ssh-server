@@ -1,14 +1,16 @@
 git-ssh-server
 =================
 
-A minimal GIT server.
+A minimal GIT server with a built-in inited git repo
+
+forked from https://github.com/unixtastic/git-ssh-server
 
 Build instructions:
 ===================
 
-git clone https://github.com/unixtastic/git-ssh-server
+git clone https://github.com/tmuskal/git-ssh-server
 
-docker build -t 'unixtastic/git-ssh-server' .
+docker build -t 'tmuskal/git-ssh-server' .
 
 Usage instructions:
 ===================
@@ -16,40 +18,26 @@ Usage instructions:
 To run this first create a data directory on your docker host to hold git data, ssh authentication,
 and possibly git-shell-commands.
 
-mkdir /docker_data/git
-
 Run the container.
 
-docker run -d -p 2222:22 -v /docker_data/git:/git unixtastic/git-ssh-server
+docker run -d -p 2222:22 -v ~/.ssh/id_rsa.pub:/key tmuskal/git-ssh-server
+
+or
+
+docker run -d -p 2222:22 -v authorized_keys:/key tmuskal/git-ssh-server
 
 You may substitute '2222' with any port number of your choosing.
 
-To add users:
-
-Setup SSH:
-cd /docker_data/git && mkdir .ssh && chown -R 987 .ssh && chmod -R 700 .ssh && touch .ssh/authorized_keys
-
-Add user public keys to .ssh/authorized_keys just like you would do for 'normal' SSH.
-
-touch /docker_data/git/.hushlogin to prevent login banners that can confuse git.
-
-To setup repos:
-
-mkdir /docker_data/git/mynewproject.git
-cd /docker_data/git/mynewproject.git
-git --bare init
-chown -R 987:987 .
-
 Clone the repo from a client:
-git clone ssh://git@myserver:2222/git/mynewproject.git
 
-To setup git-shell-commands:
+git clone ssh://git@myserver:2222/git/repo
 
-mkdir /docker_data/git/git-shell-commands
-chown 987:987 /docker_data/git/git-shell-commands
-chmod 700 /docker_data/git/git-shell-commands
-Add your commands to the above directory. You might want to start with list, which
-you can find under /usr/share/doc on most git client machines.
+
+Backup:
+=======
+
+docker run -d -p 2222:22 -v /repo:/git/repo -v ~/.ssh/id_rsa.pub:/key tmuskal/git-ssh-server
+
 
 Notes:
 ======

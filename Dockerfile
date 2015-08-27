@@ -7,12 +7,11 @@ CMD ["/sbin/my_init"]
 
 ## Expose ports.
 EXPOSE 22
-
 ## Application specific part
 MAINTAINER Stephen Day <sd@unixtastic.com>
 WORKDIR /tmp
-RUN apt-get -qq update && apt-get -qq upgrade
-RUN apt-get -qq install git-sh git sharutils
+RUN apt-get -qq -y update && apt-get -qq -y upgrade
+RUN apt-get -qq -y --force-yes install git-sh git sharutils
 
 ## Setup service
 # Setup a git user and SSH
@@ -30,3 +29,6 @@ RUN ln -fs /dev/null /run/motd.dynamic
 WORKDIR /
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+VOLUME /git/repo
+
+ADD gitstart.sh  /etc/my_init.d/01_gitstart.sh
